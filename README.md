@@ -5,17 +5,9 @@ Client program for [APNsProxyServer](https://github.com/genesix/APNS-Proxy-Serve
 ## Installation
 
 ```
-pip install git+git://github.com/genesix/APNS-Proxy-Client-py.git
-```
-
-or if you want edit
-
-```
-pip install -e git+git://github.com/genesix/APNS-Proxy-Client-py.git
+pip install -e git+git://github.com/genesix/APNS-Proxy-Client-py.git#egg=APNS-Proxy-Client
 ```
 
 ## Example
 
 ...
-
-
