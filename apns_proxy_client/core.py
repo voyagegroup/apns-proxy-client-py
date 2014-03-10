@@ -36,6 +36,7 @@ class APNSProxyClient(object):
 
         self.communicator = self.context.socket(zmq.REQ)
         self.publisher = self.context.socket(zmq.PUSH)
+        self.connected = False
 
         if not isinstance(application_id, str) or len(application_id) != 2:
             raise ValueError("application_id must be 2 length string")
@@ -46,9 +47,11 @@ class APNSProxyClient(object):
 
     def connect(self):
         """リモートサーバーへ接続"""
-        self.communicator.connect(self.build_address(self.port))
-        push_port = self.get_push_port()
-        self.publisher.connect(self.build_address(push_port))
+        if self.connected is False:
+            self.communicator.connect(self.build_address(self.port))
+            push_port = self.get_push_port()
+            self.publisher.connect(self.build_address(push_port))
+            self.connected = True
 
     def build_address(self, port):
         return "tcp://%s:%s" % (self.host, port)
