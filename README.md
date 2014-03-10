@@ -1,11 +1,11 @@
-# APNS-Proxy-Client-py
+# APNS Proxy Python Client
 
-Client program of [APNsProxyServer](https://github.com/genesix/APNS-Proxy-Server)
+Client program of [APNs Proxy Server](https://github.com/genesix/apns-proxy-server)
 
 ## Installation
 
 ```
-pip install -e git+git://github.com/genesix/APNS-Proxy-Client-py.git#egg=APNS-Proxy-Client
+pip install -e git+git://github.com/genesix/apns-proxy-client-py.git#egg=apns-proxy-client
 ```
 
 ## Example
