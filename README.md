@@ -8,6 +8,13 @@ Client program of [APNs Proxy Server](https://github.com/genesix/apns-proxy-serv
 pip install -e git+git://github.com/genesix/apns-proxy-client-py.git#egg=apns-proxy-client
 ```
 
+or
+
+```
+git clone git@github.com:genesix/apns-proxy-client-py.git
+python apns-proxy-client/setup.py install
+```
+
 ## Example
 
 ```python
