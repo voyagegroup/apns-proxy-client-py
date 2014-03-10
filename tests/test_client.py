@@ -3,7 +3,7 @@
 from nose.tools import ok_, eq_, raises
 import json
 
-from apns_proxy_client import APNSProxyClient
+from apns_proxy_client import APNSProxyClient, COMMAND_SEND
 
 
 @raises(ValueError)
@@ -25,9 +25,11 @@ def test_serialize():
     client = APNSProxyClient('localhost', 9999, '10')
 
     token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    data = client._serialize(token, 'Hey Hey', 'default', 1, None, False)
+    data = client._serialize(COMMAND_SEND, token, 'Hey Hey', 'default', 1, None, False)
 
-    native = json.loads(data)
+    eq_(COMMAND_SEND, data[:1])
+
+    native = json.loads(data[1:])
     eq_(native['token'], token)
     eq_(native['appid'], '10')
     eq_(native['test'], False)
@@ -42,9 +44,11 @@ def test_serialize_test_is_true():
     client = APNSProxyClient('localhost', 9999, '10')
 
     token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    data = client._serialize(token, 'Hey Hey', 'default', 1, None, True)
+    data = client._serialize(COMMAND_SEND, token, 'Hey Hey', 'default', 1, None, True)
 
-    native = json.loads(data)
+    eq_(COMMAND_SEND, data[:1])
+
+    native = json.loads(data[1:])
     eq_(native['token'], token)
     eq_(native['appid'], '10')
     eq_(native['test'], True)
@@ -59,9 +63,11 @@ def test_serialize_test_is_true():
     client = APNSProxyClient('localhost', 9999, '10')
 
     token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    data = client._serialize(token, u'メッセージ', 'default', 1, None, True)
+    data = client._serialize(COMMAND_SEND, token, u'メッセージ', 'default', 1, None, True)
 
-    native = json.loads(data)
+    eq_(COMMAND_SEND, data[:1])
+
+    native = json.loads(data[1:])
     eq_(native['token'], token)
     eq_(native['appid'], '10')
     eq_(native['test'], True)

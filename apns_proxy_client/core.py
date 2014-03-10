@@ -12,7 +12,8 @@ import simplejson as json
 READ_TIMEOUT = 1500  # msec
 FLUSH_TIMEOUT = 5000  # msec
 
-COMMAND_ASK_ADDRESS = b'1'
+COMMAND_ASK_ADDRESS = b'\1'
+COMMAND_SEND = b'\2'
 
 DEVICE_TOKEN_LENGTH = 64
 
@@ -71,7 +72,7 @@ class APNSProxyClient(object):
         """
         self._check_token(token)
         self.publisher.send(self._serialize(
-            token, alert, sound, badge, expiry, test
+            COMMAND_SEND, token, alert, sound, badge, expiry, test
         ))
 
     @staticmethod
@@ -79,11 +80,11 @@ class APNSProxyClient(object):
         if len(token) != DEVICE_TOKEN_LENGTH:
             raise ValueError('Invalid token length %s' % token)
 
-    def _serialize(self, token, alert, sound, badge, expiry, test):
+    def _serialize(self, command, token, alert, sound, badge, expiry, test):
         """
         送信データのフォーマット
         """
-        return json.dumps({
+        return command + json.dumps({
             'appid': self.application_id,
             'token': token,
             'test': test,
