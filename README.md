@@ -21,7 +21,7 @@ python apns-proxy-client/setup.py install
 import time
 from apns_proxy_client import APNSProxyClient
 
-client = APNSProxyClient(host="localhost", port=5556, application_id="01")
+client = APNSProxyClient(host="localhost", port=5556, application_id="myapp")
 with client:
     message = "This is notification message!!"
     expiry = int(time.time() + 60 * 60)  # 1 hour 
@@ -34,7 +34,7 @@ OR use ```connect()``` and ```close()``` instead of ```with```
 ```python
 from apns_proxy_client import APNSProxyClient
 
-client = APNSProxyClient(host="localhost", port=5556, application_id="01")
+client = APNSProxyClient(host="localhost", port=5556, application_id="myapp")
 client.connect()
 
 message = "This is notification message!!"
