@@ -44,6 +44,8 @@ for token in many_tokens:
 client.close()
 ```
 
+Set host and port for your server running on. application_id is specified in settings.py on apns-proxy-server.
+
 ## For contributor
 
 Setup work directory
