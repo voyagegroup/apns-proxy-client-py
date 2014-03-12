@@ -2,6 +2,8 @@
 
 Client program of [APNs Proxy Server](https://github.com/genesix/apns-proxy-server)
 
+<img src="https://api.travis-ci.org/genesix/apns-proxy-client-py.png?branch=master">
+
 ## Installation
 
 ```
