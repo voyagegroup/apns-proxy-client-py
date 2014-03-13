@@ -76,6 +76,7 @@ class APNSProxyClient(object):
         """
         self._check_token(token)
         self._check_alert(alert)
+        self._check_custom(custom)
         self.publisher.send(self._serialize(
             COMMAND_SEND, token, alert, sound, badge, content_available, custom,
             expiry, priority, test
@@ -96,6 +97,12 @@ class APNSProxyClient(object):
                                  'body, action_loc_key, loc_key, loc_args, launch_image')
         else:
             raise ValueError('alert must be string, unicode or dict type')
+
+    @staticmethod
+    def _check_custom(custom):
+        if custom is None or isinstance(custom, dict):
+            return
+        raise ValueError('custom must be dict type')
 
     def _serialize(self, command, token, alert, sound, badge, content_available, custom,
                    expiry, priority, test):

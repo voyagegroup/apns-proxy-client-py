@@ -175,6 +175,12 @@ def test_serialize_with_custom_field():
         }, body['aps']['custom'])
 
 
+@raises(ValueError)
+def test_serialize_with_invalid_custom_filed():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.send(TEST_TOKEN, 'Go Go', custom='Boooooo')
+
+
 def test_serialize_with_json_alert():
     client = APNSProxyClient('localhost', 9999, '10')
     client.publisher.send = mock.Mock()
