@@ -121,6 +121,7 @@ priority | number | no | 10
 
 Make file provides some useful commands.
 
+Command | Description
 --- | ---
 make setup | Setup work directory
 make lint | Code check using flake8
