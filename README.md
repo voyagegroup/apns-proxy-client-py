@@ -129,8 +129,7 @@ Code check
 make lint
 ```
 
-Test
-```
-make test
-```
+## License
+
+BSD
 
