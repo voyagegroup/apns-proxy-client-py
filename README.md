@@ -35,23 +35,20 @@ from apns_proxy_client import APNSProxyClient
 
 client = APNSProxyClient(host="localhost", port=5556, application_id="myapp")
 client.connect()
-
 for token in many_tokens:
     client.send(token, 'Hello')
-
 client.close()
 ```
 
 Set host and port for your server running on. application_id is specified in settings.py on apns-proxy-server.
 
-### send method synopsis
+### send() method synopsis
 
 ```python
 from apns_proxy_client import APNSProxyClient
 
 client = APNSProxyClient(host="localhost", port=5556, application_id="myapp")
 with client:
-
     # Simple
     client.send(token, 'Hello')
 
@@ -74,12 +71,21 @@ with client:
     # For background fetch
     client.send(token, None, sound=None, content_available=True)
 
-    # With custom field
+    # With custom field.
     client.send(token, 'With custom field', custom={
         'foo': True,
         'bar': [200, 300],
         'boo': "Hello"
     })
+    # Finally following payload will send to APNs
+    # {
+    #     "aps": {
+    #         "alert": "With custom field",
+    #         "sound": "default",
+    #      },
+    #      "foo": True,
+    #      "bar": [200, 300]
+    #}
 
     # Use JSON Payload
     client.send(token, {
@@ -101,11 +107,12 @@ with client:
 Parameters of send method
 
 Name | Type | Required | Default Value
---- | --- | ---
+--- | --- | --- | ---
 alert | string, unicode or dict | yes
-sound | string, unicode or dict | no | 'default'
+sound | string | no | 'default'
 badge | number | no | None
 content_available | bool | no | False
+custom | dict | no | None
 expiry | date | no | 1 hour
 priority | number | no | 10
 
