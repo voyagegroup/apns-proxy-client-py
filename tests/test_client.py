@@ -133,7 +133,7 @@ def test_serialize_with_content_available_False():
 
     send_data = client.publisher.send.call_args[0][0]
     body = json.loads(send_data[1:])
-    ok_(not 'content_available' in  body)
+    ok_(not 'content_available' in body)
 
 
 def test_serialize_silent_message():
@@ -172,7 +172,7 @@ def test_serialize_with_custom_field():
             'foo': 'bar',
             'boo': False
         }
-    }, body['aps']['custom'])
+        }, body['aps']['custom'])
 
 
 def test_serialize_with_json_alert():
@@ -194,7 +194,7 @@ def test_serialize_with_json_alert():
         'loc_key': None,
         'loc_args': ['one', 'two'],
         'launch_image': 'image1'
-    }, body['aps']['alert'])
+        }, body['aps']['alert'])
 
 
 @raises(ValueError)
