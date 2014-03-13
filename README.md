@@ -106,7 +106,7 @@ with client:
 
 Parameters of send method
 
-Name | Type | Required | Default Value
+Name | Type | Required | Default Value (Set on server)
 --- | --- | --- | ---
 token | string | yes | -
 alert | string, unicode or dict | yes | -
