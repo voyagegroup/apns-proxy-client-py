@@ -173,3 +173,37 @@ def test_serialize_with_custom_field():
             'boo': False
         }
     }, body['aps']['custom'])
+
+
+def test_serialize_with_json_alert():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.publisher.send = mock.Mock()
+    client.send(TEST_TOKEN, {
+        'body': 'JSON ALERT',
+        'action_loc_key': None,
+        'loc_key': None,
+        'loc_args': ['one', 'two'],
+        'launch_image': 'image1'
+    })
+
+    send_data = client.publisher.send.call_args[0][0]
+    body = json.loads(send_data[1:])
+    eq_({
+        'body': 'JSON ALERT',
+        'action_loc_key': None,
+        'loc_key': None,
+        'loc_args': ['one', 'two'],
+        'launch_image': 'image1'
+    }, body['aps']['alert'])
+
+
+@raises(ValueError)
+def test_serialize_with_invalid_json_alert1():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.send(TEST_TOKEN, {
+        'body': 'JSON ALERT',
+        'action-loc-key': None,
+        'loc-key': None,
+        'loc-args': ['one', 'two'],
+        'launch-image': 'image1'
+    })

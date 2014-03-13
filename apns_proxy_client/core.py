@@ -16,10 +16,10 @@ COMMAND_ASK_ADDRESS = b'\1'
 COMMAND_SEND = b'\2'
 
 DEVICE_TOKEN_LENGTH = 64
+JSON_ALERT_KEY_SET = set(['body', 'action_loc_key', 'loc_key', 'loc_args', 'launch_image'])
 
 
 class APNSProxyClient(object):
-
     def __init__(self, host, port, application_id):
         """
         ZMQコンテキストとソケットの初期化
@@ -75,6 +75,7 @@ class APNSProxyClient(object):
         デバイストークンの送信
         """
         self._check_token(token)
+        self._check_alert(alert)
         self.publisher.send(self._serialize(
             COMMAND_SEND, token, alert, sound, badge, content_available, custom,
             expiry, priority, test
@@ -84,6 +85,17 @@ class APNSProxyClient(object):
     def _check_token(token):
         if len(token) != DEVICE_TOKEN_LENGTH:
             raise ValueError('Invalid token length %s' % token)
+
+    @staticmethod
+    def _check_alert(alert):
+        if (alert is None or isinstance(alert, basestring)):
+            return
+        elif isinstance(alert, dict):
+            if len(set(alert.keys()) - JSON_ALERT_KEY_SET) > 0:
+                raise ValueError('JSON Alert allows only'
+                                 'body, action_loc_key, loc_key, loc_args, launch_image')
+        else:
+            raise ValueError('alert must be string, unicode or dict type')
 
     def _serialize(self, command, token, alert, sound, badge, content_available, custom,
                    expiry, priority, test):
