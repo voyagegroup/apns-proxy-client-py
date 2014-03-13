@@ -1,4 +1,4 @@
-# APNS Proxy Python Client
+# APNs Proxy Python Client
 
 Client program of [APNs Proxy Server](https://github.com/genesix/apns-proxy-server)
 
