@@ -82,36 +82,11 @@ def test_serialize_with_expiry():
     client.send(TEST_TOKEN, 'Hey Hey', expiry=one_hour)
 
     send_data = client.publisher.send.call_args[0][0]
-    eq_(COMMAND_SEND, send_data[:1])
-    eq_({
-        'token': TEST_TOKEN,
-        'appid': '10',
-        'test': False,
-        'expiry': one_hour,
-        'aps': {
-            'alert': 'Hey Hey',
-            'sound': 'default'
-        }
-        }, json.loads(send_data[1:]))
+    command = send_data[:1]
+    eq_(COMMAND_SEND, command)
 
-
-def test_serialize_with_badge():
-    client = APNSProxyClient('localhost', 9999, '10')
-    client.publisher.send = mock.Mock()
-    client.send(TEST_TOKEN, 'Hey Hey', badge=123)
-
-    send_data = client.publisher.send.call_args[0][0]
-    eq_(COMMAND_SEND, send_data[:1])
-    eq_({
-        'token': TEST_TOKEN,
-        'appid': '10',
-        'test': False,
-        'aps': {
-            'alert': 'Hey Hey',
-            'sound': 'default',
-            'badge': 123
-        }
-        }, json.loads(send_data[1:]))
+    body = json.loads(send_data[1:])
+    eq_(one_hour, body['expiry'])
 
 
 def test_serialize_with_test():
@@ -121,13 +96,19 @@ def test_serialize_with_test():
 
     send_data = client.publisher.send.call_args[0][0]
     eq_(COMMAND_SEND, send_data[:1])
-    eq_({
-        'token': TEST_TOKEN,
-        'appid': '10',
-        'test': True,
-        'aps': {
-            'alert': 'Hey Hey',
-            'sound': 'default',
-            'badge': 123
-        }
-        }, json.loads(send_data[1:]))
+
+    body = json.loads(send_data[1:])
+    eq_(True, body['test'])
+
+
+def test_serialize_with_badge():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.publisher.send = mock.Mock()
+    client.send(TEST_TOKEN, 'Hey Hey', badge=123)
+
+    send_data = client.publisher.send.call_args[0][0]
+    command = send_data[:1]
+    eq_(COMMAND_SEND, command)
+
+    body = json.loads(send_data[1:])
+    eq_(123, body['aps']['badge'])
