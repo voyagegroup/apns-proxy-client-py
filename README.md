@@ -55,11 +55,14 @@ with client:
     # Custom sound (default = 'default')
     client.send(token, 'Alert with custom sound', sound='custom')
 
-    # Silent
+    # Message without sound
     client.send(token, 'I am silent', sound=None)
 
     # Badge
     client.send(token, 'Alert with badge', badge=2)
+
+    # Change badge silently
+    client.send(token, None, sound=None, badge=9999)
 
     # Set expiry (default = 1hour)
     four_hours_later = int(time.time()) + (60 * 60 * 4)
