@@ -1,86 +1,133 @@
 # -*- coding: utf-8 -*-
 
-from nose.tools import ok_, eq_, raises
+import time
 import json
 
+import mock
+from nose.tools import ok_, eq_, raises
+
 from apns_proxy_client import APNSProxyClient, COMMAND_SEND
+
+TEST_TOKEN = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
 
 @raises(ValueError)
 def test_invalid_application_id():
-    client = APNSProxyClient('localhost', 9999, '100')
+    APNSProxyClient('localhost', 9999, 'my_app')
 
 
 @raises(ValueError)
 def test_invalid_port():
-    client = APNSProxyClient('localhost', 'abc', '10')
+    APNSProxyClient('localhost', 'abc', 'my_app')
 
 
 @raises(ValueError)
 def test_invalid_host():
-    client = APNSProxyClient(None, 8000, '10')
+    APNSProxyClient(None, 8000, 'my_app')
 
 
-def test_serialize():
+def test_send_method_called():
     client = APNSProxyClient('localhost', 9999, '10')
-
-    token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    data = client._serialize(COMMAND_SEND, token, 'Hey Hey', 'default', 1, None, False)
-
-    eq_(COMMAND_SEND, data[:1])
-
-    native = json.loads(data[1:])
-    eq_(native['token'], token)
-    eq_(native['appid'], '10')
-    eq_(native['test'], False)
-    eq_(native['aps']['alert'], 'Hey Hey')
-    eq_(native['aps']['sound'], 'default')
-    eq_(native['aps']['badge'], 1)
-    eq_(native['aps']['expiry'], None)
-    eq_(len(native.keys()), 4)
-
-
-def test_serialize_test_is_true():
-    client = APNSProxyClient('localhost', 9999, '10')
-
-    token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    data = client._serialize(COMMAND_SEND, token, 'Hey Hey', 'default', 1, None, True)
-
-    eq_(COMMAND_SEND, data[:1])
-
-    native = json.loads(data[1:])
-    eq_(native['token'], token)
-    eq_(native['appid'], '10')
-    eq_(native['test'], True)
-    eq_(native['aps']['alert'], 'Hey Hey')
-    eq_(native['aps']['sound'], 'default')
-    eq_(native['aps']['badge'], 1)
-    eq_(native['aps']['expiry'], None)
-    eq_(len(native.keys()), 4)
-
-
-def test_serialize_test_is_true():
-    client = APNSProxyClient('localhost', 9999, '10')
-
-    token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    data = client._serialize(COMMAND_SEND, token, u'メッセージ', 'default', 1, None, True)
-
-    eq_(COMMAND_SEND, data[:1])
-
-    native = json.loads(data[1:])
-    eq_(native['token'], token)
-    eq_(native['appid'], '10')
-    eq_(native['test'], True)
-    eq_(native['aps']['alert'], u'メッセージ')
-    eq_(native['aps']['sound'], 'default')
-    eq_(native['aps']['badge'], 1)
-    eq_(native['aps']['expiry'], None)
-    eq_(len(native.keys()), 4)
+    client.publisher.send = mock.Mock()
+    client.send(TEST_TOKEN, 'Hey Hey')
+    ok_(client.publisher.send.called)
 
 
 @raises(ValueError)
-def test_token_length_check():
-    token = "xxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-
+def test_invalid_token():
     client = APNSProxyClient('localhost', 9999, '10')
-    client.send(token, 'Booooom')
+    client.send('Invalid Token', 'Hey Hey')
+
+
+def test_serialize_message_only():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.publisher.send = mock.Mock()
+    client.send(TEST_TOKEN, 'Hey Hey')
+
+    send_data = client.publisher.send.call_args[0][0]
+    eq_(COMMAND_SEND, send_data[:1])
+    eq_({
+        'token': TEST_TOKEN,
+        'appid': '10',
+        'test': False,
+        'aps': {
+            'alert': 'Hey Hey',
+            'sound': 'default'
+        }
+        }, json.loads(send_data[1:]))
+
+
+def test_serialize_with_sound():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.publisher.send = mock.Mock()
+    client.send(TEST_TOKEN, 'Hey Hey', sound='xxxx')
+
+    send_data = client.publisher.send.call_args[0][0]
+    eq_(COMMAND_SEND, send_data[:1])
+    eq_({
+        'token': TEST_TOKEN,
+        'appid': '10',
+        'test': False,
+        'aps': {
+            'alert': 'Hey Hey',
+            'sound': 'xxxx'
+        }
+        }, json.loads(send_data[1:]))
+
+
+def test_serialize_with_expiry():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.publisher.send = mock.Mock()
+    one_hour = int(time.time()) + (60 * 60)
+    client.send(TEST_TOKEN, 'Hey Hey', expiry=one_hour)
+
+    send_data = client.publisher.send.call_args[0][0]
+    eq_(COMMAND_SEND, send_data[:1])
+    eq_({
+        'token': TEST_TOKEN,
+        'appid': '10',
+        'test': False,
+        'expiry': one_hour,
+        'aps': {
+            'alert': 'Hey Hey',
+            'sound': 'default'
+        }
+        }, json.loads(send_data[1:]))
+
+
+def test_serialize_with_badge():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.publisher.send = mock.Mock()
+    client.send(TEST_TOKEN, 'Hey Hey', badge=123)
+
+    send_data = client.publisher.send.call_args[0][0]
+    eq_(COMMAND_SEND, send_data[:1])
+    eq_({
+        'token': TEST_TOKEN,
+        'appid': '10',
+        'test': False,
+        'aps': {
+            'alert': 'Hey Hey',
+            'sound': 'default',
+            'badge': 123
+        }
+        }, json.loads(send_data[1:]))
+
+
+def test_serialize_with_test():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.publisher.send = mock.Mock()
+    client.send(TEST_TOKEN, 'Hey Hey', badge=123, test=True)
+
+    send_data = client.publisher.send.call_args[0][0]
+    eq_(COMMAND_SEND, send_data[:1])
+    eq_({
+        'token': TEST_TOKEN,
+        'appid': '10',
+        'test': True,
+        'aps': {
+            'alert': 'Hey Hey',
+            'sound': 'default',
+            'badge': 123
+        }
+        }, json.loads(send_data[1:]))

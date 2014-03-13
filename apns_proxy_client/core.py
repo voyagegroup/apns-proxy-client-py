@@ -87,17 +87,22 @@ class APNSProxyClient(object):
         """
         送信データのフォーマット
         """
-        return command + json.dumps({
+        aps = {
+            'alert': alert,
+            'sound': sound
+        }
+        if badge is not None:
+            aps['badge'] = badge
+
+        data = {
             'appid': self.application_id,
             'token': token,
-            'test': test,
-            'aps': {
-                'alert': alert,
-                'sound': sound,
-                'badge': badge,
-                'expiry': expiry
-            }
-        }, ensure_ascii=True)
+            'aps': aps,
+            'test': test
+        }
+        if expiry is not None:
+            data['expiry'] = expiry
+        return command + json.dumps(data, ensure_ascii=True)
 
     def __exit__(self, exc_type, exc_value, traceback):
         if exc_type:
