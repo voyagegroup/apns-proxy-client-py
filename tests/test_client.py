@@ -114,3 +114,40 @@ def test_serialize_with_priority():
     send_data = client.publisher.send.call_args[0][0]
     body = json.loads(send_data[1:])
     eq_(5, body['priority'])
+
+
+def test_serialize_with_content_available():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.publisher.send = mock.Mock()
+    client.send(TEST_TOKEN, 'Hey Hey', content_available=True)
+
+    send_data = client.publisher.send.call_args[0][0]
+    body = json.loads(send_data[1:])
+    eq_(True, body['aps']['content_available'])
+
+
+def test_serialize_with_content_available_False():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.publisher.send = mock.Mock()
+    client.send(TEST_TOKEN, 'Hey Hey', content_available=False)
+
+    send_data = client.publisher.send.call_args[0][0]
+    body = json.loads(send_data[1:])
+    ok_(not 'content_available' in  body)
+
+
+def test_serialize_silent_message():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.publisher.send = mock.Mock()
+    client.send(TEST_TOKEN, None, None, content_available=True)
+
+    send_data = client.publisher.send.call_args[0][0]
+    eq_(COMMAND_SEND, send_data[:1])
+    eq_({
+        'token': TEST_TOKEN,
+        'appid': '10',
+        'test': False,
+        'aps': {
+            'content_available': True
+        }
+        }, json.loads(send_data[1:]))
