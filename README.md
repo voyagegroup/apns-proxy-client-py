@@ -108,8 +108,8 @@ Parameters of send method
 
 Name | Type | Required | Default Value
 --- | --- | --- | ---
-token | string | yes | None
-alert | string, unicode or dict | yes | None
+token | string | yes | -
+alert | string, unicode or dict | yes | -
 sound | string | no | 'default'
 badge | number | no | None
 content_available | bool | no | False
