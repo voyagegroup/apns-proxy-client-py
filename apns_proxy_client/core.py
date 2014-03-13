@@ -70,13 +70,13 @@ class APNSProxyClient(object):
             raise IOError("Cannot connect to APNs Proxy Server. Timeout!!")
 
     def send(self, token, alert, sound='default', badge=None, content_available=False,
-             expiry=None, priority=None, test=False):
+             custom=None, expiry=None, priority=None, test=False):
         """
         デバイストークンの送信
         """
         self._check_token(token)
         self.publisher.send(self._serialize(
-            COMMAND_SEND, token, alert, sound, badge, content_available,
+            COMMAND_SEND, token, alert, sound, badge, content_available, custom,
             expiry, priority, test
         ))
 
@@ -85,7 +85,7 @@ class APNSProxyClient(object):
         if len(token) != DEVICE_TOKEN_LENGTH:
             raise ValueError('Invalid token length %s' % token)
 
-    def _serialize(self, command, token, alert, sound, badge, content_available,
+    def _serialize(self, command, token, alert, sound, badge, content_available, custom,
                    expiry, priority, test):
         """
         送信データのフォーマット
@@ -99,6 +99,8 @@ class APNSProxyClient(object):
             aps['badge'] = badge
         if content_available is True:
             aps['content_available'] = True
+        if custom is not None:
+            aps['custom'] = custom
 
         data = {
             'appid': self.application_id,

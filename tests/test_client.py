@@ -151,3 +151,25 @@ def test_serialize_silent_message():
             'content_available': True
         }
         }, json.loads(send_data[1:]))
+
+
+def test_serialize_with_custom_field():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.publisher.send = mock.Mock()
+    client.send(TEST_TOKEN, 'Hey Hey', custom={
+        'APP_CUSTOM1': 200,
+        'APP_CUSTOM2': {
+            'foo': 'bar',
+            'boo': False
+        }
+    })
+
+    send_data = client.publisher.send.call_args[0][0]
+    body = json.loads(send_data[1:])
+    eq_({
+        'APP_CUSTOM1': 200,
+        'APP_CUSTOM2': {
+            'foo': 'bar',
+            'boo': False
+        }
+    }, body['aps']['custom'])
