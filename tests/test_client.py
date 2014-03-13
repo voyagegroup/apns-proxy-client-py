@@ -82,9 +82,6 @@ def test_serialize_with_expiry():
     client.send(TEST_TOKEN, 'Hey Hey', expiry=one_hour)
 
     send_data = client.publisher.send.call_args[0][0]
-    command = send_data[:1]
-    eq_(COMMAND_SEND, command)
-
     body = json.loads(send_data[1:])
     eq_(one_hour, body['expiry'])
 
@@ -95,8 +92,6 @@ def test_serialize_with_test():
     client.send(TEST_TOKEN, 'Hey Hey', badge=123, test=True)
 
     send_data = client.publisher.send.call_args[0][0]
-    eq_(COMMAND_SEND, send_data[:1])
-
     body = json.loads(send_data[1:])
     eq_(True, body['test'])
 
@@ -107,8 +102,15 @@ def test_serialize_with_badge():
     client.send(TEST_TOKEN, 'Hey Hey', badge=123)
 
     send_data = client.publisher.send.call_args[0][0]
-    command = send_data[:1]
-    eq_(COMMAND_SEND, command)
-
     body = json.loads(send_data[1:])
     eq_(123, body['aps']['badge'])
+
+
+def test_serialize_with_priority():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.publisher.send = mock.Mock()
+    client.send(TEST_TOKEN, 'Hey Hey', priority=5)
+
+    send_data = client.publisher.send.call_args[0][0]
+    body = json.loads(send_data[1:])
+    eq_(5, body['priority'])
