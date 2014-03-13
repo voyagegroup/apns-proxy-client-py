@@ -119,15 +119,12 @@ priority | number | no | 10
 
 ## For contributor
 
-Setup work directory
-```
-make setup
-```
+Make file provides some useful commands.
 
-Code check
-```
-make lint
-```
+--- | ---
+make setup | Setup work directory
+make lint | Code check using flake8
+make test | Run tests
 
 ## License
 
