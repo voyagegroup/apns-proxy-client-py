@@ -45,7 +45,7 @@ Set host and port for your server running on. application_id is specified in set
 ### send() method synopsis
 
 ```python
-from apns_proxy_client import APNSProxyClient
+token = "YOUR_VALID_DEVICE_TOKEN"
 
 client = APNSProxyClient(host="localhost", port=5556, application_id="myapp")
 with client:
