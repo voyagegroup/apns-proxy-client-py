@@ -11,12 +11,12 @@ requires = [
     ]
 
 setup(
-    name="APNSProxyServerClient",
+    name="APNsProxyClient",
     version="0.0.1",
     author='Takashi Nishibayashi',
     author_email="takashi_nishibayashi@voyagegroup.com",
-    description=("Client module for APNS Proxy"),
-    license="MIT",
+    description=("Client module for APNs Proxy"),
+    license="BSD",
     platforms='any',
     keywords="apns",
     install_requires=requires,
