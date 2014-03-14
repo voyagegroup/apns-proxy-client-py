@@ -123,7 +123,7 @@ test | bool | no | False
 
 ## For contributor
 
-Make file provides some useful commands.
+Makefile provides some useful commands.
 
 Command | Description
 --- | ---
