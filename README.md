@@ -119,6 +119,7 @@ content_available | bool | no | False
 custom | dict | no | None
 expiry | date | no | 1 hour
 priority | number | no | 10
+test | bool | no | False
 
 ## For contributor
 
