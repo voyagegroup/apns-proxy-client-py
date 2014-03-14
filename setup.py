@@ -20,7 +20,7 @@ setup(
     platforms='any',
     keywords="apns",
     install_requires=requires,
-    url='https://github.com/genesix/APNSProxyClient-py',
+    url='https://github.com/genesix/apns-proxy-client-py',
     packages=['apns_proxy_client', 'tests'],
     long_description=read('README.md'),
     classifiers=[
