@@ -87,7 +87,8 @@ with client:
     #         "sound": "default",
     #      },
     #      "foo": True,
-    #      "bar": [200, 300]
+    #      "bar": [200, 300],
+    #      "boo": "Hello"
     #}
 
     # Use JSON Payload
