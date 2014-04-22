@@ -38,8 +38,8 @@ class APNSProxyClient(object):
         self.publisher = self.context.socket(zmq.PUSH)
         self.connected = False
 
-        if not isinstance(application_id, str) or len(application_id) != 2:
-            raise ValueError("application_id must be 2 length string")
+        if not isinstance(application_id, str):
+            raise ValueError("application_id must be string type")
         self.application_id = application_id
 
     def __enter__(self):

@@ -13,7 +13,7 @@ TEST_TOKEN = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
 @raises(ValueError)
 def test_invalid_application_id():
-    APNSProxyClient('localhost', 9999, 'my_app')
+    APNSProxyClient('localhost', 9999, 10)
 
 
 @raises(ValueError)
