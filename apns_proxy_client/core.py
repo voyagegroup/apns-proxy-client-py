@@ -14,6 +14,7 @@ FLUSH_TIMEOUT = 5000  # msec
 
 COMMAND_ASK_ADDRESS = b'\1'
 COMMAND_SEND = b'\2'
+COMMAND_FEEDBACK = b'\3'
 
 DEVICE_TOKEN_LENGTH = 64
 JSON_ALERT_KEY_SET = set(['body', 'action_loc_key', 'loc_key', 'loc_args', 'launch_image'])
@@ -81,6 +82,15 @@ class APNSProxyClient(object):
             COMMAND_SEND, token, alert, sound, badge, content_available, custom,
             expiry, priority, test
         ))
+
+    def get_feedback(self):
+        data = {
+            'appid': self.application_id,
+        }
+        command = COMMAND_FEEDBACK + json.dumps(data, ensure_ascii=True)
+
+        self.communicator.send(command)
+        return json.loads(self.communicator.recv())
 
     @staticmethod
     def _check_token(token):

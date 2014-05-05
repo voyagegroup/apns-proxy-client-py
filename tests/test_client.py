@@ -213,3 +213,16 @@ def test_serialize_with_invalid_json_alert1():
         'loc-args': ['one', 'two'],
         'launch-image': 'image1'
     })
+
+
+def test_get_feeedback():
+    client = APNSProxyClient('localhost', 9999, '10')
+    client.communicator.send = mock.Mock()
+    client.communicator.recv = mock.Mock()
+    client.communicator.recv.return_value = '{}'
+
+    client.get_feedback()
+
+    send_data = client.communicator.send.call_args[0][0]
+    body = json.loads(send_data[1:])
+    eq_({'appid': '10'}, body)
