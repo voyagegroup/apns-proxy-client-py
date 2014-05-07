@@ -24,8 +24,12 @@ from apns_proxy_client import APNSProxyClient
 
 client = APNSProxyClient(host="localhost", port=5556, application_id="myapp")
 with client:
+    # send "Hello" alerts to many tokens
     for token in many_tokens:
         client.send(token, 'Hello', badge=1)
+
+    # get disabled device tokens from feedback service
+    feedback = client.get_feedback()
 ```
 
 OR use ```connect()``` and ```close()``` instead of ```with```
@@ -35,8 +39,12 @@ from apns_proxy_client import APNSProxyClient
 
 client = APNSProxyClient(host="localhost", port=5556, application_id="myapp")
 client.connect()
+# send "Hello" alerts to many tokens
 for token in many_tokens:
     client.send(token, 'Hello')
+
+# get disabled device tokens from feedback service
+feedback = client.get_feedback()
 client.close()
 ```
 
@@ -121,6 +129,30 @@ custom | dict | no | None
 expiry | date | no | 1 hour
 priority | number | no | 10
 test | bool | no | False
+
+### get_feedback() method synopsis
+
+This client library provides a way to get disabled device tokens from APNs feedback service; just call `get_feedback()` without any parameters.
+
+`get_feedback()` returns the dict that is a pair of "device_token" and "timestamp".
+
+Name | Type | Description
+--- | --- | ---
+device_token | string | The device token string which cannot be received push notifications
+timestamp | float | The seconds since 00:00 on January 1, 1970 UTC. This value means a timestamp which APNs judged the device token should be disabled.
+
+```python
+token = "YOUR_VALID_DEVICE_TOKEN"
+client = APNSProxyClient(host="localhost", port=5556, application_id="myapp")
+
+with client:
+    feedback = client.get_feedback()
+    # a value of feedback likes the following dict:
+    #   {
+    #       "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef": 1399442843.0,  # device_token : unix timestamp
+    #       "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789": 1399442892.0,
+    #   }
+```
 
 ## For contributor
 
