@@ -7,7 +7,7 @@ Client program of [APNs Proxy Server](https://github.com/voyagegroup/apns-proxy-
 ## Installation
 
 ```
-pip install git+git://github.com/voyagegroup/apns-proxy-client-py.git
+pip install git+git://github.com/voyagegroup/apns-proxy-client-py.git@v0.1
 ```
 
 or

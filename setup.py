@@ -12,7 +12,7 @@ requires = [
 
 setup(
     name="APNsProxyClient",
-    version="0.0.1",
+    version="0.1.0",
     author='Takashi Nishibayashi',
     author_email="takashi_nishibayashi@voyagegroup.com",
     description=("Client module for APNs Proxy"),
