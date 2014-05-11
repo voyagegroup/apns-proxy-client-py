@@ -142,9 +142,7 @@ device_token | string | The device token string which cannot be received push no
 timestamp | float | The seconds since 00:00 on January 1, 1970 UTC. This value means a timestamp which APNs judged the device token should be disabled.
 
 ```python
-token = "YOUR_VALID_DEVICE_TOKEN"
 client = APNSProxyClient(host="localhost", port=5556, application_id="myapp")
-
 with client:
     feedback = client.get_feedback()
     # a value of feedback likes the following dict:
