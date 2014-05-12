@@ -2,7 +2,7 @@ import os
 from setuptools import setup
 
 version = '0.1.0'
-name = 'APNsProxyClient'
+name = 'apns-proxy-client'
 short_description = 'Client library for APNs Proxy Server.'
 
 def read(fname):
