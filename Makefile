@@ -9,3 +9,9 @@ lint:
 
 test:
 	./bin/nosetests
+
+pypi:
+	pandoc -f markdown_github -t rst -o README.rst Readme.md
+	python setup.py register
+	python setup.py sdist
+	python setup.py sdist upload
