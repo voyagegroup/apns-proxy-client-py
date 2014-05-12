@@ -7,14 +7,7 @@ Client program of [APNs Proxy Server](https://github.com/voyagegroup/apns-proxy-
 ## Installation
 
 ```
-pip install git+git://github.com/voyagegroup/apns-proxy-client-py.git@v0.1
-```
-
-or
-
-```
-git clone git@github.com:voyagegroup/apns-proxy-client-py.git
-python apns-proxy-client/setup.py install
+pip install APNsProxyClient
 ```
 
 ## How to Use
