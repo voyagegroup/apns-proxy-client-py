@@ -8,6 +8,15 @@ short_description = 'Client library for APNs Proxy Server.'
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+def read_README():
+    try:
+        # pip install from pypy
+        return read('README.rst')
+    except:
+        # pip install from github
+        return read('README.md')
+
+
 requires = [
     'pyzmq',
     'simplejson'
@@ -19,7 +28,7 @@ setup(
     author='Takashi Nishibayashi',
     author_email="takashi_nishibayashi@voyagegroup.com",
     description=short_description,
-    long_description=read('README.rst'),
+    long_description=read_README(),
     license="BSD",
     platforms='any',
     keywords="apns",
