@@ -114,7 +114,7 @@ Parameters of send method
 Name | Type | Required | Default Value (Set on server)
 --- | --- | --- | ---
 token | string | yes | -
-alert | string, unicode or dict | yes | -
+alert | string, unicode, dict or None | yes | -
 sound | string | no | 'default'
 badge | number | no | None
 content_available | bool | no | False
